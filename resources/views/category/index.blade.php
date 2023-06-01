@@ -4,6 +4,7 @@
 <main>
     <div class="container-fluid px-4">
         <h1 class="mt-4">Category</h1>
+        <a class="btn btn-primary mb-1" href="{{ route('category.create') }}" role="button">Add</a>
         <div class="card mb-4">
             <div class="card-body">
                 <table id="datatablesSimple">
@@ -22,8 +23,13 @@
                                {{ $data['name'] }}
                            </td>
                            <td>
-                               <a href="#" class="btn btn-warning ">Edit</a>
-                                <a href="#" class="btn btn-danger ">Delete</a>
+                               <form onsubmit="return confirm('Are you sure? ');" action="{{ route('category.destroy', $data->id) }}" method="POST">
+                                    <a href="{{ route('category.edit', $data->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                </form>
                            </td>
                        </tr>
                        @endforeach 

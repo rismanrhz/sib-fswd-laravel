@@ -3,74 +3,65 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\Role;
 
 class UserController extends Controller
 {
     public function index()
     {
-        $users = [
-            [
-            "name" => "Rivera",
-            "email" => "j_rivera@aol.com",
-            "phone" => "+16108448881",
-            "role" => "user"
-            ],
-            [
-            "name" => "Miller",
-            "email" => "b.miller@outlook.com",
-            "phone" => "+19184491014",
-            "role" => "admin"
-            ],
-            [
-            "name" => "Watson",
-            "email" => "mateo.watson@hotmail.com",
-            "phone" => "+19149830916",
-            "role" => "user"
-            ],
-            [
-            "name" => "Martinez",
-            "email" => "isaac.lee@aol.com",
-            "phone" => "+12012879200",
-            "role" => "user"
-            ],
-            [
-            "name" => "Jackson",
-            "email" => "a.k.jackson@ymail.com",
-            "phone" => "+17150870001",
-            "role" => "admin"
-            ],
-            [
-            "name" => "Jones",
-            "email" => "a.jones@rocketmail.com",
-            "phone" => "+15805382430",
-            "role" => "user"
-            ],
-            [
-            "name" => "Patterson",
-            "email" => "ampatterson@live.com",
-            "phone" => "+17319537871",
-            "role" => "user"
-            ],
-            [
-            "name" => "Young",
-            "email" => "m.young47@live.com",
-            "phone" => "+19153440629",
-            "role" => "user"
-            ],
-            [
-            "name" => "Hayes",
-            "email" => "j_c_hayes@outlook.com",
-            "phone" => "+17725872254",
-            "role" => "admin"
-            ],
-            [
-            "name" => "Roberts",
-            "email" => "m.roberts@live.com",
-            "phone" => "+12705646150",
-            "role" => "user"
-            ]
-        ];
+        $users = User::with('role')->get();
 
         return view('user.index', compact('users'));
+    }
+
+    public function create()
+    {
+        $roles = Role::all();
+        return view('user.create', compact('roles'));
+    }
+
+    public function store(Request $request)
+    {
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $request->password,
+            'phone' => $request->phone,
+            'role_id' => $request->role
+        ]);
+
+        return redirect()->route('user.index');
+    }
+
+    public function edit($id)
+    {
+        $user = User::find($id);
+        $roles = Role::all();
+
+        return view('user.edit', compact('user', 'roles'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $user = User::find($id);
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $request->password,
+            'phone' => $request->phone,
+            'role_id' => $request->role
+        ]);
+
+        return redirect()->route('user.index');
+    }
+
+    public function destroy($id)
+    {
+        $user = User::find($id);
+        $user->delete();
+
+        return redirect()->route('user.index');
     }
 }

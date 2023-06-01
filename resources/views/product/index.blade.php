@@ -4,6 +4,7 @@
 <main>
     <div class="container-fluid px-4">
         <h1 class="mt-4">Product</h1>
+         <a class="btn btn-primary mb-1" href="{{ route('product.create') }}" role="button">Add</a>
         <div class="card mb-4">
             <div class="card-body">
                 <table id="datatablesSimple">
@@ -19,29 +20,26 @@
                         </tr>
                     </thead>
                     <tbody>
-                       @foreach($products as $data)
+                       @foreach($products as $product)
                        <tr>
-                           <td>{{ $loop->iteration }}</td>
-                           <td>
-                               {{ $data['category'] }}
-                           </td>
-                           <td>
-                               {{ $data['name'] }}
-                           </td>
-                           <td>
-                               {{ $data['price'] }}
-                           </td>
-                           <td>
-                               {{ $data['sale_price'] }}
-                           </td>
-                           <td>
-                               {{ $data['brands'] }}
-                           </td>
-                           <td>
-                               <a href="#" class="btn btn-warning ">Edit</a>
-                                <a href="#" class="btn btn-danger ">Delete</a>
-                           </td>
-                       </tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $product->category->name }}</td>
+                            <td>{{ $product->name }}</td>
+                            <td>Rp. {{ number_format($product->price, 0, 2) }}</td>
+                            <td>Rp. {{ number_format($product->sale_price, 0, 2) }}</td>
+                            <td>
+                               {{ $product->brands }}
+                            </td>
+                            <td>
+                                <form onsubmit="return confirm('Are you sure? ');" action="{{ route('product.destroy', $product->id) }}" method="POST">
+                                    <a href="{{ route('product.edit', $product->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                </form>
+                            </td>
+                    </tr>
                        @endforeach 
                     </tbody>
                 </table>

@@ -4,6 +4,7 @@
 <main>
     <div class="container-fluid px-4">
         <h1 class="mt-4">User</h1>
+        <a class="btn btn-primary mb-1" href="{{ route('user.create') }}" role="button">Add</a>
         <div class="card mb-4">
             <div class="card-body">
                 <table id="datatablesSimple">
@@ -35,11 +36,17 @@
                                {{ $data['phone'] }}
                            </td>
                            <td>
-                               {{ $data['role'] }}
+                               {{ $data->role->name }}
                            </td>
                            <td>
-                               <a href="#" class="btn btn-warning ">Edit</a>
-                                <a href="#" class="btn btn-danger ">Delete</a>
+                               <form onsubmit="return confirm('Are you sure? ');" action="{{ route('user.destroy', $data->id) }}" method="POST">
+                                    <a href="{{ route('user.edit', $data->id ) }}" class="btn btn-warning" >edit</a>
+
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
                            </td>
                        </tr>
                        @endforeach 
