@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -23,6 +24,18 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+         $validator = Validator::make($request->all(), [
+            'name' => 'required|string|min:3',
+            'email' => 'required|email',
+            'password' => 'required|min:6',
+            'phone' => 'required|min:5',
+            'role' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator->errors());
+        }
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -44,6 +57,18 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
+         $validator = Validator::make($request->all(), [
+            'name' => 'required|string|min:3',
+            'email' => 'required|email',
+            'password' => 'required|min:6',
+            'phone' => 'required|min:5',
+            'role' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator->errors());
+        }
+
         $user = User::find($id);
 
         $user->update([

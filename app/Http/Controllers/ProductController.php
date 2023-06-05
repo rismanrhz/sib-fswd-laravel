@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Brand;
-use App\Models\Category;
-use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use App\Models\Category;
+use App\Models\Brand;
+use App\Models\Product;
 
 class ProductController extends Controller
 {
@@ -13,9 +15,13 @@ class ProductController extends Controller
     {
        $products = Product::with('category')->get();
 
-        return view('product.index',compact('products'));
-    }
+       if(Auth::user()->role->name == 'User') {
+        return view('product.card',['products' => $products]);
+       } else {
 
+       return view('product.index',['products' => $products]);
+        }
+}
 
     public function create()
     {
@@ -27,6 +33,18 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(),[
+           'category' => 'required',
+            'name' => 'required|string|min:3',
+            'price' => 'required|integer',
+            'sale_price' => 'required|integer',
+            'brand' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator->errors());
+        }
+
         $products = Product::create([
             'name' => $request->name,
             'price' => $request->price,
@@ -50,6 +68,18 @@ class ProductController extends Controller
 
     public function update(Request $request, $id)
     {
+        $validator = Validator::make($request->all(),[
+           'category' => 'required',
+            'name' => 'required|string|min:3',
+            'price' => 'required|integer',
+            'sale_price' => 'required|integer',
+            'brand' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator->errors());
+        }
+        
         $product = Product::find($id);
         $product->update([
             'name' => $request->name,
