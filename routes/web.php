@@ -10,6 +10,8 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SliderController;
+use App\Http\Controllers\LandingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,9 +30,9 @@ use App\Http\Controllers\UserController;
 
 Route::resource('home', HomeController::class)/* ->only(['index', 'create', 'show', 'edit']) */;
 
-Route::get('/', function () {
-    return view('landing');
-});
+Route::get('/', [LandingController::class, 'index'])->name('landing');
+Route::get('/product/show/{id}', [ProductController::class, 'show'])->name('products.show');
+
 Route::get('/register', [RegisterController::class ,'index'])->name('register');
 Route::post('/register', [RegisterController::class ,'store'])->name('register.store');
 
@@ -77,6 +79,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
     Route::put('/user/{id}', [UserController::class, 'update'])->name('user.update');
     Route::delete('user/{id}', [UserController::class ,'destroy'])->name('user.destroy');
+
+    Route::get('/slider', [SliderController::class, 'index'])->name('slider.index');
+    Route::get('/slider/create', [SliderController::class, 'create'])->name('slider.create');
+    Route::post('/slider', [SliderController::class, 'store'])->name('slider.store');
+    Route::get('/slider/edit/{id}', [SliderController::class, 'edit'])->name('slider.edit');
+    Route::put('/slider/{id}', [SliderController::class, 'update'])->name('slider.update');
+    Route::delete('/slider/{id}', [SliderController::class, 'destroy'])->name('slider.destroy');
     });
 
 
