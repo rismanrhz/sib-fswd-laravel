@@ -16,7 +16,7 @@
                                     @endif
 
                                     <!-- Product image-->
-                                    <img class="card-img-top" src="https://dummyimage.com/400x400/dee2e6/6c757d.jpg" alt="{{ $product->name }}" />
+                                    <img class="card-img-top" src="{{ asset('storage/product/' . $product->image) }}" alt="{{ $product->name }}" />
 
                                     <!-- Product details-->
                                     <div class="card-body p-4">
